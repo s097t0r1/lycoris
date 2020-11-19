@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.s097t0r1.lycoris.R
 import com.s097t0r1.lycoris.databinding.FragmentFeedBinding
 import com.s097t0r1.lycoris.ui.PhotoAdapter
@@ -29,8 +30,18 @@ class FeedFragment : Fragment() {
         binding = FragmentFeedBinding.inflate(inflater, container, false)
 
         initRecyclerView()
+        initErrorHandlers()
 
         return binding.root
+    }
+
+    private fun initErrorHandlers() {
+        viewModel.errorMessage.observe(viewLifecycleOwner, { errorMessage ->
+            errorMessage?.let {
+                Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
+                viewModel.errorEventComplete()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -39,7 +50,6 @@ class FeedFragment : Fragment() {
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         viewModel.photos.observe(viewLifecycleOwner, {
-            Log.d("FeedFragment", it.size.toString())
             adapter.submitList(it)
         })
 

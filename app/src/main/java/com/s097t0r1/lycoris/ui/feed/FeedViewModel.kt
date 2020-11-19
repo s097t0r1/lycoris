@@ -25,6 +25,10 @@ class FeedViewModel @ViewModelInject constructor(
     val photos: LiveData<List<Photo>>
         get() = _photos
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
     init {
         getPhotos()
     }
@@ -35,11 +39,14 @@ class FeedViewModel @ViewModelInject constructor(
 
             when(result) {
                 is Success -> _photos.value = result.data
-                is Error -> Log.e("FeedViewModel", result.e.message!!)
+                is Error -> _errorMessage.value = result.e.message ?: "Unknown error"
             }
 
-
         }
+    }
+
+    fun errorEventComplete() {
+        _errorMessage.value = null
     }
 
 
