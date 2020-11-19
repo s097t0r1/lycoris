@@ -10,4 +10,7 @@ class FeedViewModel : ViewModel() {
         value = "This is feed Fragment"
     }
     val text: LiveData<String> = _text
+
+
+
 }

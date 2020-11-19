@@ -26,6 +26,7 @@ class FeedFragment : Fragment() {
         feedViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
         return root
     }
 }
