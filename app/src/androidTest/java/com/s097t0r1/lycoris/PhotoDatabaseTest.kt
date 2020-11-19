@@ -1,6 +1,7 @@
 package com.s097t0r1.lycoris
 
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -62,6 +63,25 @@ class PhotoDatabaseTest {
         val testPhotoFromDatabase = databaseTest.databaseDAO().getPhoto("1")
 
         assert(testPhoto == testPhotoFromDatabase)
+    }
+
+    @Test
+    fun getNotExistingPhoto() {
+        val testPhoto = DatabasePhoto("1", "Lorem ipsum", "https://picsum.photos/200")
+
+        databaseTest.databaseDAO().insertPhoto(testPhoto)
+
+        val testPhotoFromDatabase = databaseTest.databaseDAO().getPhoto("2")
+
+        assert(testPhotoFromDatabase == null)
+    }
+
+    @Test
+    fun getNotExistingPhotos() {
+
+        val testPhotoFromDatabase = databaseTest.databaseDAO().getPhotos()
+
+        assert(testPhotoFromDatabase.isEmpty())
     }
 
 }
