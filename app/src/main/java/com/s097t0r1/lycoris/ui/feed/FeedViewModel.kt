@@ -4,6 +4,10 @@ import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.s097t0r1.lycoris.data.Photo
+import com.s097t0r1.lycoris.data.Success
+import com.s097t0r1.lycoris.data.Error
+import com.s097t0r1.lycoris.data.source.PhotoRepository
 import com.s097t0r1.lycoris.data.source.remote.NetworkPhoto
 import com.s097t0r1.lycoris.data.source.remote.UnsplashAPIService
 import com.s097t0r1.lycoris.data.source.remote.mapToDomainModel
@@ -14,25 +18,28 @@ import kotlinx.coroutines.withContext
 
 class FeedViewModel @ViewModelInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
-    private val networkAPIService: UnsplashAPIService
+    private val photoRepository: PhotoRepository
 ) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is feed Fragment"
+    private val _photos = MutableLiveData<List<Photo>>()
+    val photos: LiveData<List<Photo>>
+        get() = _photos
+
+    init {
+        getPhotos()
     }
-    val text: LiveData<String> = _text
 
     fun getPhotos() {
         viewModelScope.launch {
-            Log.d("Retreiving data", getNetworkPhotos().mapToDomainModel().toString())
-        }
-    }
+            val result = photoRepository.getPhotos(true)
 
-    suspend fun getNetworkPhotos(): List<NetworkPhoto> {
-        return withContext(Dispatchers.IO) {
-            return@withContext networkAPIService.getPhotos()
-        }
+            when(result) {
+                is Success -> _photos.value = result.data
+                is Error -> Log.e("FeedViewModel", result.e.message!!)
+            }
 
+
+        }
     }
 
 
