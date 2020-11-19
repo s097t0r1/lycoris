@@ -1,5 +1,6 @@
 package com.s097t0r1.lycoris.data.source.remote
 
+import com.s097t0r1.lycoris.data.Photo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -87,3 +88,16 @@ data class User (
     @Json(name = "accepted_tos")
     val acceptedTos: Boolean
 )
+
+fun NetworkPhoto.toDomainModel(): Photo {
+    return Photo(
+        id = this.id,
+        description = this.description ?: "",
+        imageUrl = this.urls["regular"] ?: "https://picsum.photos/200/300",
+        isFavorite = false
+    )
+}
+
+fun List<NetworkPhoto>.mapToDomainModel(): List<Photo> {
+    return this.map { it.toDomainModel() }
+}
