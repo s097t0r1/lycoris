@@ -1,5 +1,6 @@
 package com.s097t0r1.lycoris.data.source.remote
 
+import android.util.Log
 import com.s097t0r1.lycoris.data.Error
 import com.s097t0r1.lycoris.data.Result
 import com.s097t0r1.lycoris.data.Success
@@ -18,7 +19,7 @@ class RemoteDataSource @Inject constructor(
                 val remotePhoto = networkApi.getPhoto(id)
                 return@withContext Success(remotePhoto)
             } catch (e: Exception) {
-                return@withContext Error<Nothing>(e)
+                return@withContext Error(e)
             }
         }
     }
@@ -29,7 +30,7 @@ class RemoteDataSource @Inject constructor(
                 val remotePhotos = networkApi.getPhotos()
                 return@withContext Success(remotePhotos)
             } catch (e: Exception) {
-                return@withContext Error<Nothing>(e)
+                return@withContext Error(e)
             }
         }
     }

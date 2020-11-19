@@ -27,9 +27,9 @@ class LocalDataSource @Inject constructor(
                 if(databasePhoto != null)
                     return@withContext Success(databasePhoto)
 
-                return@withContext Error<Nothing>(Exception("This photo doesn't exist"))
+                return@withContext Error(Exception("This photo doesn't exist"))
             } catch (e: Exception) {
-                return@withContext Error<Nothing>(e)
+                return@withContext Error(e)
             }
         }
     }
@@ -40,7 +40,7 @@ class LocalDataSource @Inject constructor(
                 val listDatabasePhoto = dao.getPhotos()
                 return@withContext Success(listDatabasePhoto)
             } catch (e: Exception) {
-                return@withContext Error<Nothing>(e)
+                return@withContext Error(e)
             }
 
         }

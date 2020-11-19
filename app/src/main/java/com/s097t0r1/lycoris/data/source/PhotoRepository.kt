@@ -32,7 +32,7 @@ class PhotoRepository @Inject constructor(
                 return@withContext Success(remotePhotoResult.data.toDomainModel())
             }
 
-            return@withContext Error<Nothing>(Exception("Check internet connection"))
+            return@withContext Error(Exception("Check internet connection"))
 
         }
     }
@@ -45,7 +45,7 @@ class PhotoRepository @Inject constructor(
                 if(remoteResult is Success)
                     return@withContext Success(remoteResult.data.mapToDomainModel())
 
-                return@withContext Error<Nothing>(Exception("Check internet connection"))
+                return@withContext Error(Exception("Check internet connection"))
             }
 
             val localResult = localDataSource.getPhotos()
@@ -53,7 +53,7 @@ class PhotoRepository @Inject constructor(
             if(localResult is Success && localResult.data.isNotEmpty())
                 return@withContext Success(localResult.data.mapToDomainModel())
 
-            return@withContext Error<Nothing>(Exception("Database is empty"))
+            return@withContext Error(Exception("Database is empty"))
         }
     }
 
