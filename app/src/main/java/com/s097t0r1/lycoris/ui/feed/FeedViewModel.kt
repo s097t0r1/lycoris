@@ -29,20 +29,26 @@ class FeedViewModel @ViewModelInject constructor(
     val errorMessage: LiveData<String>
         get() = _errorMessage
 
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean>
+        get() = _dataLoading
+
     init {
         getPhotos()
     }
 
     fun getPhotos() {
         viewModelScope.launch {
+            _dataLoading.value = true
             val result = photoRepository.getPhotos(true)
 
             when(result) {
                 is Success -> _photos.value = result.data
                 is Error -> _errorMessage.value = result.e.message ?: "Unknown error"
             }
-
         }
+
+        _dataLoading.value = false
     }
 
     fun errorEventComplete() {
