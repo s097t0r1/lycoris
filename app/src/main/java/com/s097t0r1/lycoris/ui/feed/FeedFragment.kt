@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -27,12 +28,21 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFeedBinding.inflate(inflater, container, false)
+        binding = FragmentFeedBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+            feedViewModel = viewModel
+        }
 
-        initRecyclerView()
-        initErrorHandlers()
+
 
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initRecyclerView()
+        initErrorHandlers()
+        initListeners()
     }
 
     private fun initErrorHandlers() {
@@ -56,6 +66,12 @@ class FeedFragment : Fragment() {
         binding.recyclerViewPhotosList.apply {
             this.adapter = adapter
             this.layoutManager = layoutManager
+        }
+    }
+
+    private fun initListeners() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.getPhotos()
         }
     }
 

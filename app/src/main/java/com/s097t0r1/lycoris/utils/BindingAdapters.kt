@@ -1,7 +1,9 @@
 package com.s097t0r1.lycoris.utils
 
+import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.s097t0r1.lycoris.R
 
@@ -15,6 +17,13 @@ fun ImageView.setImageUrl(url: String?) {
             .centerCrop()
             .into(this)
     }
-
-
 }
+
+
+@BindingAdapter("isRefreshing")
+fun SwipeRefreshLayout.setIsRefreshing(dataLoading: Boolean?) {
+    dataLoading?.let {
+        isRefreshing = dataLoading
+    }
+}
+

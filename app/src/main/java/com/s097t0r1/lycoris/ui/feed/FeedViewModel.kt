@@ -8,10 +8,9 @@ import com.s097t0r1.lycoris.data.Photo
 import com.s097t0r1.lycoris.data.Success
 import com.s097t0r1.lycoris.data.Error
 import com.s097t0r1.lycoris.data.source.PhotoRepository
-import com.s097t0r1.lycoris.data.source.remote.NetworkPhoto
-import com.s097t0r1.lycoris.data.source.remote.UnsplashAPIService
 import com.s097t0r1.lycoris.data.source.remote.mapToDomainModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -40,15 +39,18 @@ class FeedViewModel @ViewModelInject constructor(
     fun getPhotos() {
         viewModelScope.launch {
             _dataLoading.value = true
+
             val result = photoRepository.getPhotos(true)
 
             when(result) {
                 is Success -> _photos.value = result.data
                 is Error -> _errorMessage.value = result.e.message ?: "Unknown error"
             }
+
+            _dataLoading.value = false
         }
 
-        _dataLoading.value = false
+
     }
 
     fun errorEventComplete() {
