@@ -7,11 +7,15 @@
         <variable
             name="photo"
             type="com.s097t0r1.lycoris.data.Photo" />
+        <variable
+            name="clickListener"
+            type="com.s097t0r1.lycoris.ui.ItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> clickListener.onClick(photo.id)}">
 
         <ImageView
             android:id="@+id/imageView_photo"

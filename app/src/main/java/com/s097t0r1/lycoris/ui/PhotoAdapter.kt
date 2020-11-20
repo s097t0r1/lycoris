@@ -10,12 +10,13 @@ import com.s097t0r1.lycoris.R
 import com.s097t0r1.lycoris.data.Photo
 import com.s097t0r1.lycoris.databinding.ItemPhotoBinding
 
-class PhotoAdapter() : ListAdapter<Photo, PhotoAdapter.PhotoViewHolder>(PhotoItemDiffCallback()) {
+class PhotoAdapter(private val clickListener: ItemClickListener) : ListAdapter<Photo, PhotoAdapter.PhotoViewHolder>(PhotoItemDiffCallback()) {
 
     class PhotoViewHolder private constructor(private val binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(photo: Photo) {
+        fun bind(photo: Photo, clickListener: ItemClickListener) {
             binding.photo = photo
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 
@@ -32,7 +33,7 @@ class PhotoAdapter() : ListAdapter<Photo, PhotoAdapter.PhotoViewHolder>(PhotoIte
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
     }
 }
 
@@ -47,4 +48,8 @@ class PhotoItemDiffCallback : DiffUtil.ItemCallback<Photo>() {
         return (oldItem.description == newItem.description) && (oldItem.imageUrl == newItem.imageUrl)
     }
 
+}
+
+fun interface ItemClickListener {
+    fun onClick(id: String)
 }

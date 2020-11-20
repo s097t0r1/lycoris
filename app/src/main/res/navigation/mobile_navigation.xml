@@ -9,7 +9,13 @@
         android:id="@+id/navigation_feed"
         android:name="com.s097t0r1.lycoris.ui.feed.FeedFragment"
         android:label="@string/title_feed"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed" >
+        <action
+            android:id="@+id/action_navigation_feed_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:popUpTo="@id/navigation_feed"
+            app:popUpToInclusive="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_favorites"
@@ -22,4 +28,12 @@
         android:name="com.s097t0r1.lycoris.ui.about.AboutFragment"
         android:label="@string/title_about"
         tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.s097t0r1.lycoris.ui.details.DetailsFragment"
+        android:label="Details">
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>
