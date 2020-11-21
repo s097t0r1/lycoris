@@ -21,7 +21,12 @@
         android:id="@+id/navigation_favorites"
         android:name="com.s097t0r1.lycoris.ui.favorites.FavoritesFragment"
         android:label="@string/title_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_navigation_favorites_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:popUpTo="@id/navigation_favorites" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_about"

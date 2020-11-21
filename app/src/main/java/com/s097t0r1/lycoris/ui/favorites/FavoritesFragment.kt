@@ -6,26 +6,56 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.s097t0r1.lycoris.R
+import com.s097t0r1.lycoris.databinding.FragmentFavoritesBinding
+import com.s097t0r1.lycoris.ui.PhotoAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
-    private lateinit var favoritesViewModel: FavoritesViewModel
+    private val viewModel: FavoritesViewModel by viewModels()
+    private lateinit var binding: FragmentFavoritesBinding
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        favoritesViewModel =
-                ViewModelProvider(this).get(FavoritesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_favorites, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        favoritesViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+        binding = FragmentFavoritesBinding.inflate(inflater, container, false).apply {
+            favoritesViewModel = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        initRecyclerView()
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPhotos()
+    }
+
+    private fun initRecyclerView() {
+        val adapter = PhotoAdapter { id ->
+            findNavController().navigate(FavoritesFragmentDirections.actionNavigationFavoritesToDetailsFragment(id))
+        }
+
+        val layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+
+        binding.favoritesList.apply {
+            this.adapter = adapter
+            this.layoutManager = layoutManager
+        }
+
+        viewModel.photos.observe(viewLifecycleOwner, {
+            adapter.submitList(it)
         })
-        return root
     }
 }
