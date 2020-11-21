@@ -1,6 +1,5 @@
 package com.s097t0r1.lycoris.ui.feed
 
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -8,11 +7,7 @@ import com.s097t0r1.lycoris.data.Photo
 import com.s097t0r1.lycoris.data.Success
 import com.s097t0r1.lycoris.data.Error
 import com.s097t0r1.lycoris.data.source.PhotoRepository
-import com.s097t0r1.lycoris.data.source.remote.mapToDomainModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class FeedViewModel @ViewModelInject constructor(
@@ -24,9 +19,9 @@ class FeedViewModel @ViewModelInject constructor(
     val photos: LiveData<List<Photo>>
         get() = _photos
 
-    private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String>
-        get() = _errorMessage
+    private val _errorLoadingData = MutableLiveData<Boolean>()
+    val errorLoadingData: LiveData<Boolean>
+        get() = _errorLoadingData
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean>
@@ -39,22 +34,19 @@ class FeedViewModel @ViewModelInject constructor(
     fun getPhotos() {
         viewModelScope.launch {
             _dataLoading.value = true
+            _errorLoadingData.value = false
 
             val result = photoRepository.getPhotos(true)
 
             when(result) {
                 is Success -> _photos.value = result.data
-                is Error -> _errorMessage.value = result.e.message ?: "Unknown error"
+                is Error -> _errorLoadingData.value = true
             }
 
             _dataLoading.value = false
         }
 
 
-    }
-
-    fun errorEventComplete() {
-        _errorMessage.value = null
     }
 
 
