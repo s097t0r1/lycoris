@@ -23,6 +23,9 @@ class DetailsViewModel @ViewModelInject constructor(
     val errorLoadingData: LiveData<Boolean>
         get() = _errorLoadingData
 
+    private val _errorMarkingFavorite = MutableLiveData<Boolean>(false)
+    val errorMarkingFavorite: LiveData<Boolean>
+        get() = _errorMarkingFavorite
 
     private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean>
@@ -44,7 +47,29 @@ class DetailsViewModel @ViewModelInject constructor(
 
     }
 
+    fun markFavorite(favorite: Boolean) {
+        viewModelScope.launch {
+
+            if(photo.value == null) {
+                _errorMarkingFavorite.value = true
+                return@launch
+            }
+
+            if(favorite)
+                photoRepository.insertPhoto(_photo.value!!)
+            else
+                photoRepository.deletePhoto(_photo.value!!)
+
+            _photo.value!!.isFavorite = favorite
+        }
+    }
+
+
     fun errorEventComplete() {
         _errorLoadingData.value = false
+    }
+
+    fun errorMarkingFavoriteEventComplete() {
+        _errorMarkingFavorite.value = false
     }
 }

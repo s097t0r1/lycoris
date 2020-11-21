@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FavoriteButton">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@drawable/button_favorite</item>
+        <item name="android:text"></item>
+        <item name="android:textOff"></item>
+        <item name="android:textOn"></item>
+    </style>
+</resources>

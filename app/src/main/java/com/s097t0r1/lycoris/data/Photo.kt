@@ -6,7 +6,7 @@ data class Photo (
         val id: String,
         val description: String,
         val imageUrl: String,
-        val isFavorite: Boolean
+        var isFavorite: Boolean
 )
 
 fun Photo.toDatabaseModel(): DatabasePhoto {

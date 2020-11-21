@@ -24,21 +24,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{detailsViewModel.errorLoadingData &amp;&amp; detailsViewModel.dataLoading ? View.GONE : View.VISIBLE}">
 
             <ImageView
                 imageUrl="@{detailsViewModel.photo.imageUrl}"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="400dp"
                 android:contentDescription="@{detailsViewModel.photo.description}"
                 tools:srcCompat="@drawable/ic_baseline_person_24" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
                 android:text="@{detailsViewModel.photo.description}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textAlignment="center"
                 tools:text="Lorem ipsum" />
+
+            <ToggleButton
+                android:id="@+id/favorite_button"
+                style="@style/FavoriteButton"
+                android:layout_gravity="end"
+                android:layout_margin="4dp"
+                onToggle="@{(button, checked) -> detailsViewModel.markFavorite(checked)}"
+                android:checked="@{detailsViewModel.photo.favorite}" />
 
         </LinearLayout>
 
@@ -48,7 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="@{detailsViewModel.dataLoading ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{detailsViewModel.dataLoading ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -58,7 +69,8 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:visibility="@{detailsViewModel.errorLoadingData ? View.VISIBLE : View.GONE}"
-            app:drawableTopCompat="@drawable/ic_baseline_error_outline_128" />
+            app:drawableTopCompat="@drawable/ic_baseline_error_outline_128"
+            tools:visibility="gone" />
 
 
     </FrameLayout>

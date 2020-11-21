@@ -2,10 +2,8 @@ package com.s097t0r1.lycoris.ui.details
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -24,16 +22,19 @@ class DetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentDetailsBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             detailsViewModel = viewModel
         }
 
-        initErrorHandlers()
         viewModel.getPhoto(args.id)
+
+        initErrorHandlers()
 
         return binding.root
     }
+
 
     private fun initErrorHandlers() {
         viewModel.errorLoadingData.observe(viewLifecycleOwner, { errorLoadingData ->
@@ -41,7 +42,15 @@ class DetailsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Check internet connection", Toast.LENGTH_SHORT).show()
             }
         })
+
+        viewModel.errorMarkingFavorite.observe(viewLifecycleOwner, { errorMarkingFavorite ->
+            if(errorMarkingFavorite) {
+                Toast.makeText(requireContext(), "Error marking favorite", Toast.LENGTH_SHORT).show()
+                viewModel.errorMarkingFavoriteEventComplete()
+            }
+        })
     }
+
 
 
 }

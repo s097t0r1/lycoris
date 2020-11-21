@@ -1,7 +1,8 @@
 package com.s097t0r1.lycoris.utils
 
-import android.util.Log
+import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.ToggleButton
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -27,3 +28,10 @@ fun SwipeRefreshLayout.setIsRefreshing(dataLoading: Boolean?) {
     }
 }
 
+
+@BindingAdapter("onToggle")
+fun ToggleButton.setOnToggleListener(onToggleListener: CompoundButton.OnCheckedChangeListener?) {
+    onToggleListener?.let {
+        this.setOnCheckedChangeListener(onToggleListener)
+    }
+}

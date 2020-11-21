@@ -63,4 +63,10 @@ class PhotoRepository @Inject constructor(
         }
     }
 
+    suspend fun deletePhoto(photo: Photo) {
+        withContext(Dispatchers.IO) {
+            localDataSource.deletePhoto(photo.toDatabaseModel())
+        }
+    }
+
 }
