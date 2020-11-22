@@ -26,9 +26,9 @@ class FavoritesViewModel @ViewModelInject constructor(
     val errorLoadingData: LiveData<Boolean>
         get() = _errorLoadingData
 
-    private val _dataLoading = MutableLiveData<Boolean>(false)
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    private val _loadingData = MutableLiveData<Boolean>(false)
+    val loadingData: LiveData<Boolean>
+        get() = _loadingData
 
     init {
         getPhotos()
@@ -37,7 +37,7 @@ class FavoritesViewModel @ViewModelInject constructor(
     fun getPhotos() {
         viewModelScope.launch {
             _emptyResult.value = false
-            _dataLoading.value = true
+            _loadingData.value = true
 
             val result = photoRepository.getPhotos(false)
 
@@ -46,7 +46,7 @@ class FavoritesViewModel @ViewModelInject constructor(
                 is Error -> _emptyResult.value = true
             }
 
-            _dataLoading.value = false
+            _loadingData.value = false
         }
     }
 
