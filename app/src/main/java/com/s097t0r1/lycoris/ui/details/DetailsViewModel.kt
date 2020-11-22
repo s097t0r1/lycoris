@@ -23,53 +23,36 @@ class DetailsViewModel @ViewModelInject constructor(
     val errorLoadingData: LiveData<Boolean>
         get() = _errorLoadingData
 
-    private val _errorMarkingFavorite = MutableLiveData<Boolean>(false)
-    val errorMarkingFavorite: LiveData<Boolean>
-        get() = _errorMarkingFavorite
-
-    private val _dataLoading = MutableLiveData<Boolean>(false)
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    private val _loadingData = MutableLiveData<Boolean>(false)
+    val loadingData: LiveData<Boolean>
+        get() = _loadingData
 
     fun getPhoto(id: String) {
         viewModelScope.launch {
-            _dataLoading.value = true
-            val result = photoRepository.getPhoto(id)
+            _errorLoadingData.value = false
+            _loadingData.value = true
 
+            val result = photoRepository.getPhoto(id)
             when(result) {
                 is Success -> _photo.value = result.data
                 is Error -> _errorLoadingData.value = true
             }
 
-            _dataLoading.value = false
+            _loadingData.value = false
         }
-
-
     }
 
     fun markFavorite(favorite: Boolean) {
         viewModelScope.launch {
+            _photo.value?.let { photo ->
+                if(favorite)
+                    photoRepository.insertPhoto(photo)
+                else
+                    photoRepository.deletePhoto(photo)
 
-            if(photo.value == null) {
-                _errorMarkingFavorite.value = true
-                return@launch
+                _photo.value!!.isFavorite = favorite
             }
-
-            if(favorite)
-                photoRepository.insertPhoto(_photo.value!!)
-            else
-                photoRepository.deletePhoto(_photo.value!!)
-
-            _photo.value!!.isFavorite = favorite
         }
     }
 
-
-    fun errorEventComplete() {
-        _errorLoadingData.value = false
-    }
-
-    fun errorMarkingFavoriteEventComplete() {
-        _errorMarkingFavorite.value = false
-    }
 }
