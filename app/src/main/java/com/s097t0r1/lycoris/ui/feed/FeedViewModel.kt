@@ -23,9 +23,9 @@ class FeedViewModel @ViewModelInject constructor(
     val errorLoadingData: LiveData<Boolean>
         get() = _errorLoadingData
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean>
-        get() = _dataLoading
+    private val _loadingData = MutableLiveData<Boolean>()
+    val loadingData: LiveData<Boolean>
+        get() = _loadingData
 
     init {
         getPhotos()
@@ -33,21 +33,18 @@ class FeedViewModel @ViewModelInject constructor(
 
     fun getPhotos() {
         viewModelScope.launch {
-            _dataLoading.value = true
+            _loadingData.value = true
             _errorLoadingData.value = false
 
             val result = photoRepository.getPhotos(true)
 
-            when(result) {
+            when (result) {
                 is Success -> _photos.value = result.data
                 is Error -> _errorLoadingData.value = true
             }
 
-            _dataLoading.value = false
+            _loadingData.value = false
         }
-
-
     }
-
 
 }

@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.s097t0r1.lycoris.databinding.FragmentFeedBinding
 import com.s097t0r1.lycoris.ui.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,33 +28,30 @@ class FeedFragment : Fragment() {
             feedViewModel = viewModel
         }
 
+        setupRecyclerView()
+        setupListeners()
+
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initRecyclerView()
-        initListeners()
-    }
-
-    private fun initRecyclerView() {
-        val adapter = PhotoAdapter {
-            findNavController().navigate(FeedFragmentDirections.actionNavigationFeedToDetailsFragment(it))
+    private fun setupRecyclerView() {
+        val adapter = PhotoAdapter() { id ->
+            findNavController().navigate(FeedFragmentDirections.actionNavigationFeedToDetailsFragment(id))
         }
-        val layoutManager =
-            GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
-        viewModel.photos.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
+        val layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         binding.recyclerViewPhotosList.apply {
             this.adapter = adapter
             this.layoutManager = layoutManager
         }
+
+        viewModel.photos.observe(viewLifecycleOwner, { listPhotos ->
+            adapter.submitList(listPhotos)
+        })
     }
 
-    private fun initListeners() {
+    private fun setupListeners() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.getPhotos()
         }
