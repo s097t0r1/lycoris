@@ -3,9 +3,9 @@ package com.s097t0r1.lycoris.ui.favorites
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.s097t0r1.lycoris.data.Error
 import com.s097t0r1.lycoris.data.Photo
 import com.s097t0r1.lycoris.data.Success
-import com.s097t0r1.lycoris.data.Error
 import com.s097t0r1.lycoris.data.source.PhotoRepository
 import kotlinx.coroutines.launch
 
@@ -38,11 +38,14 @@ class FavoritesViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             _emptyResult.value = false
             _dataLoading.value = true
+
             val result = photoRepository.getPhotos(false)
-            when(result) {
+
+            when (result) {
                 is Success -> _photos.value = result.data
                 is Error -> _emptyResult.value = true
             }
+
             _dataLoading.value = false
         }
     }

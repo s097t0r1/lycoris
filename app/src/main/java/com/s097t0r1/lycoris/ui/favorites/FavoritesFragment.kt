@@ -4,14 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.s097t0r1.lycoris.R
 import com.s097t0r1.lycoris.databinding.FragmentFavoritesBinding
 import com.s097t0r1.lycoris.ui.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,19 +16,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private val viewModel: FavoritesViewModel by viewModels()
+
     private lateinit var binding: FragmentFavoritesBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false).apply {
             favoritesViewModel = viewModel
             lifecycleOwner = viewLifecycleOwner
         }
 
-        initRecyclerView()
+        setupRecyclerView()
 
         return binding.root
     }
@@ -42,8 +39,8 @@ class FavoritesFragment : Fragment() {
         viewModel.getPhotos()
     }
 
-    private fun initRecyclerView() {
-        val adapter = PhotoAdapter { id ->
+    private fun setupRecyclerView() {
+        val adapter = PhotoAdapter() { id ->
             findNavController().navigate(FavoritesFragmentDirections.actionNavigationFavoritesToDetailsFragment(id))
         }
 
@@ -54,8 +51,8 @@ class FavoritesFragment : Fragment() {
             this.layoutManager = layoutManager
         }
 
-        viewModel.photos.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
+        viewModel.photos.observe(viewLifecycleOwner, { listPhotos ->
+            adapter.submitList(listPhotos)
         })
     }
 }
