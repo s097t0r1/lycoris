@@ -5,7 +5,7 @@ import androidx.room.*
 @Dao
 interface DAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertPhoto(photo: DatabasePhoto)
 
     @Delete
