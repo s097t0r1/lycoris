@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @InstallIn(ApplicationComponent::class)
@@ -20,3 +21,7 @@ object DatabaseModule {
         return PhotoDatabase.getInstance(context).databaseDAO()
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class LocalDataSourceQualifier

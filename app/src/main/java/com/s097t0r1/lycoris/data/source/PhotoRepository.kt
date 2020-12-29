@@ -1,12 +1,14 @@
 package com.s097t0r1.lycoris.data.source
 
 import com.s097t0r1.lycoris.data.*
-import com.s097t0r1.lycoris.data.source.local.LocalDataSource
+import com.s097t0r1.lycoris.data.source.local.DatabasePhoto
 import com.s097t0r1.lycoris.data.source.local.mapToDomainModel
 import com.s097t0r1.lycoris.data.source.local.toDomainModel
-import com.s097t0r1.lycoris.data.source.remote.RemoteDataSource
+import com.s097t0r1.lycoris.data.source.remote.NetworkPhoto
 import com.s097t0r1.lycoris.data.source.remote.mapToDomainModel
 import com.s097t0r1.lycoris.data.source.remote.toDomainModel
+import com.s097t0r1.lycoris.di.LocalDataSourceQualifier
+import com.s097t0r1.lycoris.di.RemoteDataSourceQualifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -14,8 +16,8 @@ import javax.inject.Singleton
 
 @Singleton
 class PhotoRepository @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    @LocalDataSourceQualifier private val localDataSource: DefaultDataSource<DatabasePhoto>,
+    @RemoteDataSourceQualifier private val remoteDataSource: DefaultDataSource<NetworkPhoto>
 ) {
 
     suspend fun getPhoto(id: String): Result<Photo> {
