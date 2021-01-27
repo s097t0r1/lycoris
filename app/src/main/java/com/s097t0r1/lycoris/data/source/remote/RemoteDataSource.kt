@@ -28,7 +28,7 @@ class RemoteDataSource @Inject constructor(
     override suspend fun getPhotos(): Result<List<NetworkPhoto>> {
         return withContext(Dispatchers.IO) {
             try {
-                val remotePhotos = networkApi.getPhotos()
+                val remotePhotos = networkApi.getPhotos(1)
                 return@withContext Success(remotePhotos)
             } catch (e: Exception) {
                 return@withContext Error(e)
