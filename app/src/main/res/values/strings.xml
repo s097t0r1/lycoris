@@ -13,4 +13,5 @@
         * Glide \n
         * Safe args \n
     </string>
+    <string name="retry_button_text">Retry</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.s097t0r1.lycoris.databinding.FragmentFeedBinding
 import com.s097t0r1.lycoris.ui.PagingPhotoAdapter
+import com.s097t0r1.lycoris.ui.PhotoLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -23,6 +24,7 @@ class FeedFragment : Fragment() {
 
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var binding: FragmentFeedBinding
+    private lateinit var adapter: PagingPhotoAdapter
 
 
     private var gettingPhotoJob: Job? = null
@@ -44,9 +46,11 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val adapter = PagingPhotoAdapter() { id ->
+        adapter = PagingPhotoAdapter { id ->
             findNavController().navigate(FeedFragmentDirections.actionNavigationFeedToDetailsFragment(id))
         }
+
+        val adapter = this.adapter
 
         adapter.addLoadStateListener { loadState ->
             binding.swipeRefreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
@@ -57,7 +61,10 @@ class FeedFragment : Fragment() {
         val layoutManager = GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
 
         binding.recyclerViewPhotosList.apply {
-            this.adapter = adapter
+            this.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = PhotoLoadStateAdapter() { adapter.retry() },
+                footer = PhotoLoadStateAdapter() { adapter.retry() }
+            )
             this.layoutManager = layoutManager
         }
 
@@ -69,7 +76,7 @@ class FeedFragment : Fragment() {
         gettingPhotoJob?.cancel()
         gettingPhotoJob = lifecycleScope.launch {
             viewModel.getPhotos().collect {
-                (binding.recyclerViewPhotosList.adapter as PagingPhotoAdapter).submitData(it)
+                adapter.submitData(it)
             }
         }
     }
