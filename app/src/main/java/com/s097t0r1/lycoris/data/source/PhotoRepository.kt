@@ -26,42 +26,38 @@ class PhotoRepository @Inject constructor(
 ) {
 
     suspend fun getPhoto(id: String): Result<Photo> {
-        return withContext(Dispatchers.Default) {
-            val localPhotoResult = localDataSource.getPhoto(id)
+        val localPhotoResult = localDataSource.getPhoto(id)
 
-            if(localPhotoResult is Success && localPhotoResult.data != null) {
-                return@withContext Success(localPhotoResult.data.toDomainModel())
-            }
-
-            val remotePhotoResult = remoteDataSource.getPhoto(id)
-
-            if(remotePhotoResult is Success) {
-                return@withContext Success(remotePhotoResult.data.toDomainModel())
-            }
-
-            return@withContext Error(Exception("Check internet connection"))
-
+        if (localPhotoResult is Success && localPhotoResult.data != null) {
+            return Success(localPhotoResult.data.toDomainModel())
         }
+
+        val remotePhotoResult = remoteDataSource.getPhoto(id)
+
+        if (remotePhotoResult is Success) {
+            return Success(remotePhotoResult.data.toDomainModel())
+        }
+
+        return Error(Exception("Check internet connection"))
+
     }
 
     suspend fun getPhotos(forceUpdate: Boolean): Result<List<Photo>> {
-        return withContext(Dispatchers.Default) {
-            if(forceUpdate) {
-                val remoteResult = remoteDataSource.getPhotos()
+        if (forceUpdate) {
+            val remoteResult = remoteDataSource.getPhotos()
 
-                if(remoteResult is Success)
-                    return@withContext Success(remoteResult.data.mapToDomainModel())
+            if (remoteResult is Success)
+                return Success(remoteResult.data.mapToDomainModel())
 
-                return@withContext Error(Exception("Check internet connection"))
-            }
-
-            val localResult = localDataSource.getPhotos()
-
-            if(localResult is Success && localResult.data.isNotEmpty())
-                return@withContext Success(localResult.data.mapToDomainModel())
-
-            return@withContext Error(Exception("Database is empty"))
+            return Error(Exception("Check internet connection"))
         }
+
+        val localResult = localDataSource.getPhotos()
+
+        if (localResult is Success && localResult.data.isNotEmpty())
+            return Success(localResult.data.mapToDomainModel())
+
+        return Error(Exception("Database is empty"))
     }
 
     fun getPhotos(): Flow<PagingData<Photo>> =
@@ -75,15 +71,11 @@ class PhotoRepository @Inject constructor(
         }
 
     suspend fun insertPhoto(photo: Photo) {
-        withContext(Dispatchers.IO) {
-            localDataSource.insertPhoto(photo.toDatabaseModel())
-        }
+        localDataSource.insertPhoto(photo.toDatabaseModel())
     }
 
     suspend fun deletePhoto(photo: Photo) {
-        withContext(Dispatchers.IO) {
-            localDataSource.deletePhoto(photo.toDatabaseModel())
-        }
+        localDataSource.deletePhoto(photo.toDatabaseModel())
     }
 
     companion object {
