@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.10'
 }
 
 
@@ -86,12 +87,11 @@ dependencies {
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
-    // Moshi
-    implementation 'com.squareup.moshi:moshi:1.11.0'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.11.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.11.0'
+    // KotlinX serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
