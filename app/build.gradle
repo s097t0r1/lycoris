@@ -104,5 +104,23 @@ dependencies {
     // Multidex
     implementation 'com.android.support:multidex:1.0.3'
 
-
+    implementation 'com.github.ridi:ktlint-ruleset:Tag'
 }
+
+ktlint {
+    debug = true
+    android = true
+    outputColorName = "RED"
+//        disabledRules = ["final-newline"]
+    reporters {
+        reporter "plain"
+        reporter "html"
+//        customReporters {
+//            "csv" {
+//                fileExtension = "csv"
+//                dependency = project(':csvReporter')
+//            }
+//        }
+    }
+}
+

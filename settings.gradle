@@ -1,2 +1,3 @@
+include ':csvReporter'
 include ':app'
 rootProject.name = "Lycoris"

@@ -19,7 +19,10 @@ abstract class PhotoDatabase : RoomDatabase() {
                 var instance = INSTANCE
 
                 if(instance == null)
-                    instance = Room.databaseBuilder(context, PhotoDatabase::class.java, "photos-database")
+                    instance = Room.databaseBuilder(
+                        context,
+                        PhotoDatabase::class.java, "photos-database"
+                    )
                         .fallbackToDestructiveMigration()
                         .build()
 
